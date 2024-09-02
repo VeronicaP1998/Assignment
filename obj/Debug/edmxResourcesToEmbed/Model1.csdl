@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TestEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tblComments" EntityType="TestModel.tblComment" />
+    <EntitySet Name="tblOrder_Items" EntityType="TestModel.tblOrder_Items" />
+    <EntitySet Name="tblOrders" EntityType="TestModel.tblOrder" />
+    <EntitySet Name="tblPosts" EntityType="TestModel.tblPost" />
+    <EntitySet Name="tblProducts" EntityType="TestModel.tblProduct" />
+    <EntitySet Name="tblUsers" EntityType="TestModel.tblUser" />
+    <AssociationSet Name="FK_tblComments_tblUsers" Association="TestModel.FK_tblComments_tblUsers">
+      <End Role="tblUser" EntitySet="tblUsers" />
+      <End Role="tblComment" EntitySet="tblComments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrder_Items_tblOrder_Items" Association="TestModel.FK_tblOrder_Items_tblOrder_Items">
+      <End Role="tblOrder_Items" EntitySet="tblOrder_Items" />
+      <End Role="tblOrder_Items1" EntitySet="tblOrder_Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrder_Items_tblProducts" Association="TestModel.FK_tblOrder_Items_tblProducts">
+      <End Role="tblProduct" EntitySet="tblProducts" />
+      <End Role="tblOrder_Items" EntitySet="tblOrder_Items" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblOrders_tblUsers" Association="TestModel.FK_tblOrders_tblUsers">
+      <End Role="tblUser" EntitySet="tblUsers" />
+      <End Role="tblOrder" EntitySet="tblOrders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_tblPosts_tblUsers" Association="TestModel.FK_tblPosts_tblUsers">
+      <End Role="tblUser" EntitySet="tblUsers" />
+      <End Role="tblPost" EntitySet="tblPosts" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="tblComment">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Post_ID" Type="Int32" Nullable="false" />
+    <Property Name="Author_ID" Type="Int32" Nullable="false" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Created_At" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="tblUser" Relationship="TestModel.FK_tblComments_tblUsers" FromRole="tblComment" ToRole="tblUser" />
+  </EntityType>
+  <EntityType Name="tblOrder_Items">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OrderID" Type="Int32" />
+    <Property Name="ProductID" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="tblOrder_Items1" Relationship="TestModel.FK_tblOrder_Items_tblOrder_Items" FromRole="tblOrder_Items" ToRole="tblOrder_Items1" />
+    <NavigationProperty Name="tblOrder_Items2" Relationship="TestModel.FK_tblOrder_Items_tblOrder_Items" FromRole="tblOrder_Items1" ToRole="tblOrder_Items" />
+    <NavigationProperty Name="tblProduct" Relationship="TestModel.FK_tblOrder_Items_tblProducts" FromRole="tblOrder_Items" ToRole="tblProduct" />
+  </EntityType>
+  <EntityType Name="tblOrder">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="Total_Price" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Created_At" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="tblUser" Relationship="TestModel.FK_tblOrders_tblUsers" FromRole="tblOrder" ToRole="tblUser" />
+  </EntityType>
+  <EntityType Name="tblPost">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Author_ID" Type="Int32" Nullable="false" />
+    <Property Name="Created_At" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="tblUser" Relationship="TestModel.FK_tblPosts_tblUsers" FromRole="tblPost" ToRole="tblUser" />
+  </EntityType>
+  <EntityType Name="tblProduct">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="tblOrder_Items" Relationship="TestModel.FK_tblOrder_Items_tblProducts" FromRole="tblProduct" ToRole="tblOrder_Items" />
+  </EntityType>
+  <EntityType Name="tblUser">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="tblComments" Relationship="TestModel.FK_tblComments_tblUsers" FromRole="tblUser" ToRole="tblComment" />
+    <NavigationProperty Name="tblOrders" Relationship="TestModel.FK_tblOrders_tblUsers" FromRole="tblUser" ToRole="tblOrder" />
+    <NavigationProperty Name="tblPosts" Relationship="TestModel.FK_tblPosts_tblUsers" FromRole="tblUser" ToRole="tblPost" />
+  </EntityType>
+  <Association Name="FK_tblComments_tblUsers">
+    <End Type="TestModel.tblUser" Role="tblUser" Multiplicity="1" />
+    <End Type="TestModel.tblComment" Role="tblComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUser">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblComment">
+        <PropertyRef Name="Author_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrder_Items_tblOrder_Items">
+    <End Type="TestModel.tblOrder_Items" Role="tblOrder_Items" Multiplicity="1" />
+    <End Type="TestModel.tblOrder_Items" Role="tblOrder_Items1" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="tblOrder_Items">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblOrder_Items1">
+        <PropertyRef Name="ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrder_Items_tblProducts">
+    <End Type="TestModel.tblProduct" Role="tblProduct" Multiplicity="0..1" />
+    <End Type="TestModel.tblOrder_Items" Role="tblOrder_Items" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblProduct">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblOrder_Items">
+        <PropertyRef Name="ProductID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblOrders_tblUsers">
+    <End Type="TestModel.tblUser" Role="tblUser" Multiplicity="0..1" />
+    <End Type="TestModel.tblOrder" Role="tblOrder" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUser">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblOrder">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_tblPosts_tblUsers">
+    <End Type="TestModel.tblUser" Role="tblUser" Multiplicity="1" />
+    <End Type="TestModel.tblPost" Role="tblPost" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tblUser">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="tblPost">
+        <PropertyRef Name="Author_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
